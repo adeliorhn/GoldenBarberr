@@ -1,0 +1,119 @@
+/**
+ * This ruleset enforces a security model for the GoldenBarber application.
+ *
+ * Core Philosophy: The security model is based on strict user ownership and the
+ * principle of least privilege. Data is either private to a specific user or
+ * publicly readable by everyone. Write access to public data is disabled by
+ * default, assuming it will be managed by a backend admin process.
+ *
+ * Data Structure: User-specific data, such as appointments, is nested within a
+ * user's own document tree in the `/users/{userId}` path. Publicly accessible
+ * data, such as barber profiles and services, resides in top-level collections
+ * like `/barber_profiles` and `/services`.
+ *
+ * Key Security Decisions:
+ * - User Isolation: Users can only access documents within their own data tree
+ *   (`/users/{userId}`). Listing users from the top-level `/users` collection is
+ *   explicitly forbidden to protect user privacy.
+ * - Path-Based Security: Ownership is determined by the document's path,
+ *   specifically the `{userId}` wildcard. This avoids slow and costly `get()`
+ *   calls in the rules.
+ * - Public Data is Read-Only: Collections like `/barber_profiles` and
+ *   `/services` are world-readable to allow clients to browse offerings, but all
+ *   write operations are denied. This provides a secure default until an
+ *   administrative role is defined.
+ * - Relational Integrity: On creation of user-owned documents (like
+ *   profiles and appointments), rules enforce that an internal ID field
+ *   (e.g., `userProfileId`) matches the user's ID from the path. This field is
+ *   then made immutable on updates.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for readable and maintainable rules.
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the authenticated user's UID matches the provided userId.
+     * This is the primary function for verifying document ownership.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks for ownership on an existing document. Used for update/delete
+     * operations to prevent acting on non-existent data.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * @description Rules for the UserProfile documents.
+     * @path /users/{userId}
+     * @allow (create) An authenticated user creating their own profile document. `request.auth.uid == userId`.
+     * @deny (get) A user trying to read another user's profile.
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Rules for a user's appointments subcollection.
+       * @path /users/{userId}/appointments/{appointmentId}
+       * @allow (create) An authenticated user creating an appointment for themselves under their own user path.
+       * @deny (list) A user trying to list appointments belonging to another user.
+       * @principle Enforces document ownership for all operations within a user-specific subcollection.
+       */
+      match /appointments/{appointmentId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userProfileId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userProfileId == resource.data.userProfileId;
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    /**
+     * @description Barber profiles are public for browsing but cannot be modified by clients.
+     * @path /barber_profiles/{barberProfileId}
+     * @allow (get) Any user, authenticated or not, reading a barber's profile.
+     * @deny (create) Any user trying to create a new barber profile.
+     * @principle Establishes a public, read-only collection. Writes are disabled for security until an admin mechanism is implemented.
+     */
+    match /barber_profiles/{barberProfileId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Services are public for browsing but cannot be modified by clients.
+     * @path /services/{serviceId}
+     * @allow (get) Any user, authenticated or not, reading a service's details.
+     * @deny (update) Any user trying to change the price of a service.
+     * @principle Establishes a public, read-only collection. Writes are disabled for security until an admin mechanism is implemented.
+     */
+    match /services/{serviceId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

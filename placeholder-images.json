@@ -1,0 +1,46 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "A stylish and classic barbershop interior",
+      "imageUrl": "https://images.unsplash.com/photo-1738606406673-3a01d1517888?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YmFyYmVyc2hvcCUyMGludGVyaW9yfGVufDB8fHx8MTc2NTM4MjMyN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "barbershop interior"
+    },
+    {
+      "id": "barber1",
+      "description": "Portrait of a skilled male barber",
+      "imageUrl": "https://images.unsplash.com/photo-1643898803342-77f0ddec8353?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtYWxlJTIwYmFyYmVyJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzY1NDM4NzI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "male barber portrait"
+    },
+    {
+      "id": "barber2",
+      "description": "Portrait of an experienced barber",
+      "imageUrl": "https://images.unsplash.com/photo-1582893561942-d61adcb2e534?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxiYXJiZXIlMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU0MzYzNjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "barber portrait"
+    },
+    {
+      "id": "barber3",
+      "description": "Portrait of a talented female barber",
+      "imageUrl": "https://images.unsplash.com/photo-1594150608366-da1107c57702?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmVtYWxlJTIwYmFyYmVyfGVufDB8fHx8MTc2NTQzODcyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "female barber"
+    },
+    {
+      "id": "service1",
+      "description": "A person receiving a classic haircut",
+      "imageUrl": "https://images.unsplash.com/photo-1762343040706-b74ea936c1c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2xhc3NpYyUyMGhhaXJjdXR8ZW58MHx8fHwxNzY1NDM4NzI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "classic haircut"
+    },
+    {
+      "id": "service2",
+      "description": "A person getting their beard trimmed",
+      "imageUrl": "https://images.unsplash.com/photo-1643899552489-7ddc0a0418a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxiZWFyZCUyMHRyaW18ZW58MHx8fHwxNzY1NDM4NzI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beard trim"
+    },
+    {
+      "id": "service3",
+      "description": "A person relaxing with a hot towel on their face",
+      "imageUrl": "https://images.unsplash.com/photo-1625931046289-e51edea3e176?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxob3QlMjB0b3dlbHxlbnwwfHx8fDE3NjU0Mzg3MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hot towel"
+    }
+  ]
+}

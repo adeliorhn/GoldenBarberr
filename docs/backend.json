@@ -1,0 +1,234 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile in the GoldenBarber application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity."
+        },
+        "googleId": {
+          "type": "string",
+          "description": "The Google ID of the user, obtained during Google Sign-In."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user.",
+          "format": "email"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The phone number of the user."
+        }
+      },
+      "required": [
+        "id",
+        "googleId",
+        "firstName",
+        "lastName",
+        "email"
+      ]
+    },
+    "BarberProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "BarberProfile",
+      "type": "object",
+      "description": "Represents a barber's profile with their specialization, experience, and customer reviews.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the BarberProfile entity."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the barber."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the barber."
+        },
+        "specialization": {
+          "type": "string",
+          "description": "The specialization of the barber (e.g., haircuts, shaves, styling)."
+        },
+        "experienceYears": {
+          "type": "number",
+          "description": "The number of years of experience the barber has."
+        },
+        "bio": {
+          "type": "string",
+          "description": "A short biography of the barber."
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "specialization",
+        "experienceYears"
+      ]
+    },
+    "Service": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Service",
+      "type": "object",
+      "description": "Represents a service offered by the barbershop, along with its pricing.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Service entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the service (e.g., Haircut, Beard Trim)."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the service."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the service."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "price"
+      ]
+    },
+    "Appointment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Appointment",
+      "type": "object",
+      "description": "Represents an appointment booked by a user with a specific barber at a specific time.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Appointment entity."
+        },
+        "userProfileId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N Appointment)"
+        },
+        "barberProfileId": {
+          "type": "string",
+          "description": "Reference to BarberProfile. (Relationship: BarberProfile 1:N Appointment)"
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "Reference to Service. (Relationship: Service 1:N Appointment)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "The start time of the appointment.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "The end time of the appointment.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userProfileId",
+        "barberProfileId",
+        "serviceId",
+        "startTime",
+        "endTime"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profiles.  Path-based ownership.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/barber_profiles/{barberProfileId}",
+        "definition": {
+          "entityName": "BarberProfile",
+          "schema": {
+            "$ref": "#/backend/entities/BarberProfile"
+          },
+          "description": "Stores barber profiles.",
+          "params": [
+            {
+              "name": "barberProfileId",
+              "description": "The unique identifier for the barber profile."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/services/{serviceId}",
+        "definition": {
+          "entityName": "Service",
+          "schema": {
+            "$ref": "#/backend/entities/Service"
+          },
+          "description": "Stores the services offered.",
+          "params": [
+            {
+              "name": "serviceId",
+              "description": "The unique identifier for the service."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/appointments/{appointmentId}",
+        "definition": {
+          "entityName": "Appointment",
+          "schema": {
+            "$ref": "#/backend/entities/Appointment"
+          },
+          "description": "Stores appointments for each user. Path-based ownership.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "appointmentId",
+              "description": "The unique identifier for the appointment."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to manage user profiles, barber profiles, services, and appointments for the GoldenBarber application.  It prioritizes authorization independence, clarity, and security. User profiles, barber profiles, services, and appointments are stored in separate collections.\n\nAuthorization Independence is achieved via path-based ownership for user-related data (appointments). No `get()` calls are required in security rules to validate ownership.  All documents within a collection share the same security posture (Structural Segregation). This significantly simplifies security rules. Appointment documents are placed under the user's document (users/{userId}/appointments/{appointmentId}), which helps enforce ownership. No custom claims are needed. Roles will be defined using security rules based solely on `request.auth.uid`.\n\nThe structure supports the required QAPs by using segregation to create secure `list` operations.  For example, only the authenticated user can list appointments in their subcollection."
+  }
+}
